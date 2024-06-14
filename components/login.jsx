@@ -10,7 +10,7 @@ import {
 import { auth, db } from "../firebase";
 import Button from "./Button";
 import Input from "./Input";
-import { TouchableOpacity } from "react-native-web";
+import { TouchableOpacity } from "react-native";
 
 const Login = ({ navigation }) => {
   const handleCreateAccount = () => {
@@ -37,10 +37,6 @@ const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // Lógica para manejar el inicio de sesión
-    navigation.navigate("Home");
-  };
   return (
     <ImageBackground
       source={require("../assets/fondo.jpg")}
