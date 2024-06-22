@@ -1,17 +1,10 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Image,
-  ImageBackground,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, StyleSheet, Image, ImageBackground } from "react-native";
 import Button from "./Button";
 import { db } from "../firebase";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
-const Producto = () => {
+const ModificarProducto = () => {
   const [nombreProducto, setNombreProducto] = useState("");
   const [codigoProducto, setCodigoProducto] = useState("");
   const [cantidad, setCantidad] = useState("");
@@ -19,23 +12,38 @@ const Producto = () => {
   const [mensajeExito, setMensajeExito] = useState("");
 
   const navigation = useNavigation();
+  const route = useRoute();
+  const { id } = route.params;
+
+  useEffect(() => {
+    const fetchProducto = async () => {
+      const doc = await db.collection("Product").doc(id).get();
+      const data = doc.data();
+      setNombreProducto(data.Nombre);
+      setCodigoProducto(data.codigoProducto);
+      setCantidad(data.cantidad);
+      setFechaCaducidad(data.fechaCaducidad);
+    };
+
+    fetchProducto();
+  }, [id]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    db.collection("Product").doc(codigoProducto).set({
+    db.collection("Product").doc(id).update({
       Nombre: nombreProducto,
       codigoProducto: codigoProducto,
       cantidad: cantidad,
       fechaCaducidad: fechaCaducidad,
     }).then(() => {
-      console.log("Agregado correctamente");
-      setMensajeExito("Producto registrado exitosamente.");
+      console.log("Producto modificado correctamente");
+      setMensajeExito("Producto modificado exitosamente.");
       setTimeout(() => {
         setMensajeExito("");
         navigation.navigate("Principal");
       }, 2000);
     }).catch((error) => {
-      console.error("Error al registrar el producto: ", error);
+      console.error("Error al modificar el producto: ", error);
     });
   };
 
@@ -137,16 +145,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   successMessage: {
-    fontSize: 30,
-    color: "white",
+    fontSize: 18,
+    color: "green",
     marginVertical: 20,
     textAlign: "center",
-    backgroundColor: "#871F1F",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
-    width: 300,
   },
 });
 
-export default Producto;
+export default ModificarProducto;

@@ -1,19 +1,17 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  ImageBackground,
-} from "react-native";
+import { View, StyleSheet, ImageBackground } from "react-native";
 import Button from "./Button";
 import { auth, db } from "../firebase";
+import Input from "./Input";
+import { useNavigation } from "@react-navigation/native";
 
 const Registro = () => {
   const [nombreCompleto, setNombreCompleto] = useState("");
   const [correoElectronico, setCorreoElectronico] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [comprobarContrasena, setComprobarContrasena] = useState("");
+  const navigation = useNavigation();
+
   const submitHandler = (e) => {
     e.preventDefault();
     auth
@@ -22,7 +20,7 @@ const Registro = () => {
         const user = userCredential.user;
         console.log("Usuario registrado:", user);
 
-        return db.collection('User').doc(user.uid).set({
+        return db.collection("User").doc(user.uid).set({
           Nombre: nombreCompleto,
           Correo: correoElectronico,
           Password: contrasena,
@@ -31,7 +29,7 @@ const Registro = () => {
       })
       .then(() => {
         console.log("Datos del usuario guardados en Firestore");
-        navigation.navigate("Producto");
+        navigation.navigate("Principal");
       })
       .catch((error) => {
         console.error("Error al registrar el usuario:", error);
@@ -44,32 +42,41 @@ const Registro = () => {
       style={styles.background}
     >
       <View style={styles.container}>
-        <Text style={styles.label}>Nombre completo</Text>
-        <TextInput
-          style={styles.input}
-          value={nombreCompleto}
-          onChangeText={setNombreCompleto}
-        />
-        <Text style={styles.label}>Correo electrónico</Text>
-        <TextInput
-          style={styles.input}
-          value={correoElectronico}
-          onChangeText={setCorreoElectronico}
-        />
-        <Text style={styles.label}>Contraseña</Text>
-        <TextInput
-          style={styles.input}
-          value={contrasena}
-          onChangeText={setContrasena}
-          secureTextEntry
-        />
-        <Text style={styles.label}>Comprobar contraseña</Text>
-        <TextInput
-          style={styles.input}
-          value={comprobarContrasena}
-          onChangeText={setComprobarContrasena}
-          secureTextEntry
-        />
+        <View style={styles.inputsContainer}>
+          <View style={styles.Inputcontainer}>
+            <Input
+              icon={require("../assets/user-solid.png")}
+              placeholder="Nombre completo"
+              onChangeText={setNombreCompleto}
+              hide={false}
+            />
+          </View>
+          <View style={styles.Inputcontainer}>
+            <Input
+              icon={require("../assets/envelope.png")}
+              placeholder="Correo electrónico"
+              onChangeText={setCorreoElectronico}
+              hide={false}
+            />
+          </View>
+          <View style={styles.Inputcontainer}>
+            <Input
+              icon={require("../assets/lock.png")}
+              placeholder="Contraseña"
+              onChangeText={setContrasena}
+              hide={true}
+            />
+          </View>
+          <View style={styles.Inputcontainer}>
+            <Input
+              icon={require("../assets/lock.png")}
+              placeholder="Comprobar contraseña"
+              onChangeText={setComprobarContrasena}
+              hide={true}
+            />
+          </View>
+        </View>
+
         <Button
           handleClick={submitHandler}
           textStyle={styles.buttonStyles}
@@ -84,13 +91,32 @@ const Registro = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#fff",
+    overflow: "hidden",
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
   },
   background: {
     flex: 1,
     resizeMode: "cover",
     opacity: 1,
+  },
+  Inputcontainer: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 20,
+    marginBottom: 25,
+    height: 20,
+  },
+  inputsContainer: {
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 329,
   },
   label: {
     fontSize: 16,

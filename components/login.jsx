@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Image,
-  ImageBackground,
-} from "react-native";
+import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
 import { auth, db } from "../firebase";
 import Button from "./Button";
 import Input from "./Input";
@@ -14,9 +7,11 @@ import { TouchableOpacity } from "react-native";
 
 const Login = ({ navigation }) => {
   const handleCreateAccount = () => {
-    // Lógica para manejar la creación de una nueva cuenta
     navigation.navigate("Registro");
   };
+
+  //Correo correojonatan@gmail.com
+  //Contraseña 12345678
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -24,13 +19,13 @@ const Login = ({ navigation }) => {
       .signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log("Usuario registrado:", user);
+        console.log("Usuario iniciado:", user);
       })
       .then(() => {
-        navigation.navigate("Producto");
+        navigation.navigate("Principal");
       })
       .catch((error) => {
-        console.error("Error al registrar el usuario:", error);
+        console.error("Error al iniciar el usuario:", error);
       });
   };
 
@@ -92,7 +87,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#fff",
     overflow: "hidden",
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
     overflow: "hidden",
   },
   logo: {
